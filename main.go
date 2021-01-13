@@ -9,7 +9,7 @@ import (
 
 // Book represents a container for marks
 type Book struct {
-	Marks []*Mark
+	Marks []Mark
 }
 
 // Mark represents a persistent item
@@ -25,7 +25,7 @@ func (b *Book) ListMarks() {
 	fmt.Printf("%q", b.Marks)
 }
 func (b *Book) GetMark() {}
-func (b *Book) AddMark(m *Mark) {
+func (b *Book) AddMark(m Mark) {
 	b.Marks = append(b.Marks, m)
 }
 func (b *Book) ModifyMark() {}
@@ -44,6 +44,6 @@ func main() {
 		Comment: "Blubber ist bla",
 		Added:   time.Now()}
 
-	b.AddMark(&m)
+	b.AddMark(m)
 	b.ListMarks()
 }
