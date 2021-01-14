@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/url"
 	"time"
+
+	"github.com/kekscode/earl/app/cmd"
 )
 
 // Book represents a container for marks
@@ -32,6 +34,8 @@ func (b *Book) ModifyMark() {}
 func (b *Book) DeleteMark() {}
 
 func main() {
+	cmd.Execute()
+
 	b := Book{}
 	u, err := url.Parse("https://google.de")
 	if err != nil {
