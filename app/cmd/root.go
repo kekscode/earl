@@ -13,7 +13,7 @@ var (
 		Use:   "earl",
 		Short: "Earl manages URLs",
 		Long: `Earl is used to add, manage and retrieve URLs.
-		It can be used on the command line and as a server.`,
+It may be used on the command line and as a server.`,
 	}
 )
 
@@ -28,6 +28,7 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 	rootCmd.AddCommand(editCmd)
 	rootCmd.AddCommand(deleteCmd)
+	rootCmd.AddCommand(serveCmd)
 }
 
 func er(msg interface{}) {
