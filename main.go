@@ -9,6 +9,7 @@ func main() {
 	cmd.Execute()
 
 	book := book.New()
-	book.AddMark("https://google.de", "", []string{}, "")
+	book.AddMark("https://user:pass@google.de/test?bla=blubb%20#chapter!one", "", []string{}, "")
 	book.ListMarks()
+	book.SaveToJSON()
 }

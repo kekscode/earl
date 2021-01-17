@@ -1,7 +1,10 @@
 package book
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/url"
 	"time"
@@ -14,7 +17,8 @@ type Book struct {
 
 // Mark represents a persistent item
 type Mark struct {
-	URL     *url.URL
+	ID      string
+	URL     url.URL
 	Title   string
 	Tags    []string
 	Comment string
@@ -27,6 +31,16 @@ func New() Book {
 	return b
 }
 
+func (b *Book) SaveToJSON() error {
+	file, _ := json.MarshalIndent(b, "", " ")
+	err := ioutil.WriteFile("earl.json", file, 0644)
+	if err != nil {
+		err := errors.New(fmt.Sprintf("Could not write to disk %v", file))
+		return err
+	}
+	return nil
+}
+
 func (b *Book) ListMarks() {
 	fmt.Printf("%q", b.Marks)
 }
@@ -37,7 +51,8 @@ func (b *Book) AddMark(addr string, title string, tags []string, comment string)
 		log.Fatalf("%q", err)
 	}
 	m := Mark{
-		URL:     u,
+		ID:      u.String(),
+		URL:     *u,
 		Title:   title,
 		Tags:    tags,
 		Comment: comment,
