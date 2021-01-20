@@ -64,9 +64,10 @@ func (b *Book) ListMarks() string {
 func (b *Book) ListMarksHTML() string {
 	// TODO: templated output
 	var urlizedMarks []string
-	urlizedMarks = append(urlizedMarks, "<html><head>Earl</head><body>")
+	urlizedMarks = append(urlizedMarks, "<html><head><title>Earl</title></head><body>")
 	for _, mark := range b.Marks {
-		urlizedMarks = append(urlizedMarks, fmt.Sprintf("<ul><p>%q</p></ul>", mark))
+		urlizedMarks = append(urlizedMarks,
+			fmt.Sprintf("<ul><p><a href=\"%s\">%s</a></p></ul>", mark.ID, mark.ID))
 	}
 	urlizedMarks = append(urlizedMarks, "</body></html>")
 
