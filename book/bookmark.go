@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -41,9 +42,37 @@ func (b *Book) SaveToJSON() error {
 	return nil
 }
 
-func (b *Book) ListMarks() {
-	fmt.Printf("%q", b.Marks)
+func (b *Book) ReadFromJSON() error {
+	file, err := ioutil.ReadFile("earl.json")
+	if err != nil {
+		err := errors.New(fmt.Sprintf("Could not read from disk %v", file))
+		return err
+	}
+	err = json.Unmarshal(file, b)
+	if err != nil {
+		err := errors.New(fmt.Sprintf("Could not unmarshal json from file %v", file))
+		return err
+	}
+
+	return nil
 }
+
+func (b *Book) ListMarks() string {
+	return fmt.Sprintf("%q", b.Marks)
+}
+
+func (b *Book) ListMarksHTML() string {
+	// TODO: templated output
+	var urlizedMarks []string
+	urlizedMarks = append(urlizedMarks, "<html><head>Earl</head><body>")
+	for _, mark := range b.Marks {
+		urlizedMarks = append(urlizedMarks, fmt.Sprintf("<ul><p>%q</p></ul>", mark))
+	}
+	urlizedMarks = append(urlizedMarks, "</body></html>")
+
+	return strings.Join(urlizedMarks, "\n")
+}
+
 func (b *Book) GetMark() {}
 func (b *Book) AddMark(addr string, title string, tags []string, comment string) {
 	u, err := url.Parse(addr)
