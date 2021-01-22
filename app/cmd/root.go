@@ -23,12 +23,25 @@ func Execute() error {
 }
 
 func init() {
+	// earl add <url> [<title>] [<tags>] [<comment>]
 	rootCmd.AddCommand(addCmd)
-	addCmd.Flags().String("url", "", "https://myurl... ending with a whitespace")
+	addCmd.Flags().StringP("url", "u", "", "https://myurl... ending with a whitespace")
+	addCmd.Flags().StringP("tags", "t", "", "music,hifi,software")
+	addCmd.Flags().StringP("comment", "c", "", "\"A comment in quotes\"")
+
+	// earl show "<url> [<title>] [<tags>] [<comment>]"
 	rootCmd.AddCommand(showCmd)
+
+	// earl list <url> [<title>] [<tags>] [<comment>]
 	rootCmd.AddCommand(listCmd)
+
+	// earl edit <url> [<title>] [<tags>] [<comment>]
 	rootCmd.AddCommand(editCmd)
+
+	// earl del,delete,remove,rm <url>
 	rootCmd.AddCommand(deleteCmd)
+
+	// earl serve
 	rootCmd.AddCommand(serveCmd)
 }
 
