@@ -8,11 +8,13 @@ import (
 	"log"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 )
 
 // Book represents a container for marks
 type Book struct {
+	sync.Mutex
 	Marks []Mark
 }
 
@@ -20,7 +22,6 @@ type Book struct {
 type Mark struct {
 	ID      string
 	URL     url.URL
-	Title   string
 	Tags    []string
 	Comment string
 	Added   time.Time
@@ -33,6 +34,8 @@ func New() Book {
 }
 
 func (b *Book) SaveToJSON() error {
+	b.Lock()
+	defer b.Unlock()
 	file, _ := json.MarshalIndent(b, "", " ")
 	err := ioutil.WriteFile("earl.json", file, 0644)
 	if err != nil {
@@ -75,15 +78,15 @@ func (b *Book) ListMarksHTML() string {
 }
 
 func (b *Book) GetMark() {}
-func (b *Book) AddMark(addr string, title string, tags []string, comment string) {
+func (b *Book) AddMark(addr string, tags []string, comment string) {
 	u, err := url.Parse(addr)
+	// TODO: Return this error
 	if err != nil {
 		log.Fatalf("%q", err)
 	}
 	m := Mark{
 		ID:      u.String(),
 		URL:     *u,
-		Title:   title,
 		Tags:    tags,
 		Comment: comment,
 		Added:   time.Now(),

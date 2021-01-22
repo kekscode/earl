@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/kekscode/earl/book"
 	"github.com/spf13/cobra"
 )
 
@@ -12,9 +13,27 @@ var (
 		Use:   "add",
 		Short: "add an URL",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println(cmd.Flags().GetString("url"))
-			fmt.Println(cmd.Flags().GetString("tags"))
-			fmt.Println(cmd.Flags().GetString("comment"))
+			book := book.New()
+			book.ReadFromJSON()
+
+			url, err := cmd.Flags().GetString("url")
+			if err != nil {
+				fmt.Errorf("Error: %v", err)
+			}
+
+			tags, err := cmd.Flags().GetStringSlice("tags")
+			if err != nil {
+				fmt.Errorf("Error: %v", err)
+			}
+
+			comment, err := cmd.Flags().GetString("comment")
+			if err != nil {
+				fmt.Errorf("Error: %v", err)
+			}
+
+			book.AddMark(url, tags, comment)
+
+			book.SaveToJSON()
 		},
 	}
 )
