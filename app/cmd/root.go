@@ -26,7 +26,7 @@ func init() {
 	// earl add <url> [<title>] [<tags>] [<comment>]
 	rootCmd.AddCommand(addCmd)
 	addCmd.Flags().StringP("url", "u", "", "https://myurl... ending with a whitespace")
-	addCmd.Flags().StringP("tags", "t", "", "music,hifi,software")
+	addCmd.Flags().StringSliceP("tags", "t", []string{"audio", "video", "software"}, "Comma-separated list")
 	addCmd.Flags().StringP("comment", "c", "", "\"A comment in quotes\"")
 
 	// earl show "<url> [<title>] [<tags>] [<comment>]"
