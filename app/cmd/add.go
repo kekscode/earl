@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -13,7 +12,9 @@ var (
 		Use:   "add",
 		Short: "add an URL",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Print: " + strings.Join(args, " "))
+			fmt.Println(cmd.Flags().GetString("url"))
+			fmt.Println(cmd.Flags().GetString("tags"))
+			fmt.Println(cmd.Flags().GetString("comment"))
 		},
 	}
 )
