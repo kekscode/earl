@@ -24,6 +24,7 @@ func Execute() error {
 
 func init() {
 	rootCmd.AddCommand(addCmd)
+	addCmd.Flags().String("url", "", "https://myurl... ending with a whitespace")
 	rootCmd.AddCommand(showCmd)
 	rootCmd.AddCommand(listCmd)
 	rootCmd.AddCommand(editCmd)

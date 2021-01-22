@@ -12,6 +12,7 @@ var (
 	addCmd = &cobra.Command{
 		Use:   "add",
 		Short: "add an URL",
+
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println("Print: " + strings.Join(args, " "))
 		},

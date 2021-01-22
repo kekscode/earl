@@ -90,5 +90,5 @@ func (b *Book) AddMark(addr string, title string, tags []string, comment string)
 	}
 	b.Marks = append(b.Marks, m)
 }
-func (b *Book) ModifyMark() {}
+func (b *Book) UpdateMark() {}
 func (b *Book) DeleteMark() {}
