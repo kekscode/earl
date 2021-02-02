@@ -43,6 +43,7 @@ func init() {
 
 	// earl serve
 	rootCmd.AddCommand(serveCmd)
+	serveCmd.Flags().IntP("port", "p", 8080, "local listening port")
 }
 
 func er(msg interface{}) {
