@@ -1,7 +1,6 @@
 package main
 
 import (
-	"embed"
 	"log"
 	"os"
 	"os/signal"
@@ -11,11 +10,7 @@ import (
 	"github.com/kekscode/earl/book"
 )
 
-//go:embed templates/*
-var f embed.FS
-
 func main() {
-
 	go func() {
 		sig := make(chan os.Signal)
 		signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)

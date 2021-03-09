@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"embed"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 
@@ -22,13 +24,22 @@ var (
 			serve(p)
 		},
 	}
+
+	//go:embed templates/*
+	f embed.FS
 )
 
 func serve(port int) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		b := book.New()
 		b.ReadFromJSON()
-		fmt.Fprintf(w, b.ListMarksHTML())
+
+		tmpl, err := template.New("index").ParseFS(f, "templates/index.html")
+		if err != nil {
+			fmt.Errorf(err.Error())
+		}
+
+		tmpl.ExecuteTemplate(w, "index.html", b.ListMarksHTML())
 	})
 
 	addr := fmt.Sprintf(":%d", port)
