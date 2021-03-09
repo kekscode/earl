@@ -39,7 +39,9 @@ func serve(port int) {
 			fmt.Errorf(err.Error())
 		}
 
-		tmpl.ExecuteTemplate(w, "index.html", b.ListMarksHTML())
+		tmpl.ExecuteTemplate(w, "index.html", struct{ Content string }{
+			Content: "help",
+		})
 	})
 
 	addr := fmt.Sprintf(":%d", port)
