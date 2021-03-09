@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"log"
 	"os"
 	"os/signal"
@@ -9,6 +10,9 @@ import (
 	"github.com/kekscode/earl/app/cmd"
 	"github.com/kekscode/earl/book"
 )
+
+//go:embed templates/*
+var f embed.FS
 
 func main() {
 
