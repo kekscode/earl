@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"text/template"
 
 	"github.com/kekscode/earl/book"
@@ -33,33 +32,11 @@ var (
 
 func serve(port int, tmpl *template.Template) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
 		b := book.New()
 		b.ReadFromJSON()
 
-		//tmpl, err := template.New("index.html").ParseFS(fs, "templates/index.html")
-		//if err != nil {
-		//	fmt.Errorf("Error: %v", err)
-		//}
-
-		w.Header().Add("Content-Type", "text/html")
-
-		// Debug
-		fmt.Printf("%v", tmpl)
-		tmpl.Execute(os.Stdout, nil)
-		tmpl.ExecuteTemplate(os.Stdout, "index.html", nil)
-		tmpl.ExecuteTemplate(os.Stdout, "index.html", struct{ test string }{test: "stefan"})
-		tmpl.ExecuteTemplate(os.Stdout, "index.html", b.ListMarks())
-		// End Debug
-
-		tmpl.ExecuteTemplate(w, "index.html", nil)
-		//	Marks: b.ListMarks(),
-		//})
-		//fmt.Printf("%v", b.ListMarks())
-		//err = tmpl.Execute(w, struct{}{})
-		//if err != nil {
-		//fmt.Errorf("Error: %v", err)
-		//}
-
+		tmpl.ExecuteTemplate(w, "index.html", struct{ test string }{test: "stefan"})
 	})
 
 	addr := fmt.Sprintf(":%d", port)
