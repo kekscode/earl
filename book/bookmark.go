@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/url"
-	"strings"
 	"sync"
 	"time"
 )
@@ -60,21 +59,8 @@ func (b *Book) ReadFromJSON() error {
 	return nil
 }
 
-func (b *Book) ListMarks() string {
-	return fmt.Sprintf("%q", b.Marks)
-}
-
-func (b *Book) ListMarksHTML() string {
-	// TODO: templated output
-	var urlizedMarks []string
-	urlizedMarks = append(urlizedMarks, "<html><head><title>Earl</title></head><body>")
-	for _, mark := range b.Marks {
-		urlizedMarks = append(urlizedMarks,
-			fmt.Sprintf("<ul><p><a href=\"%s\">%s</a></p></ul>", mark.ID, mark.ID))
-	}
-	urlizedMarks = append(urlizedMarks, "</body></html>")
-
-	return strings.Join(urlizedMarks, "\n")
+func (b *Book) ListMarks() []Mark {
+	return b.Marks
 }
 
 func (b *Book) GetMark() {}

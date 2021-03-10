@@ -3,15 +3,20 @@ package cmd
 import (
 	"embed"
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
+	"os"
+	"text/template"
 
 	"github.com/kekscode/earl/book"
 	"github.com/spf13/cobra"
 )
 
 var (
+	//go:embed templates/*
+	fs   embed.FS
+	tmpl = template.Must(template.ParseFS(fs, "templates/index.html"))
+
 	// Used for flags.
 	serveCmd = &cobra.Command{
 		Use:   "serve",
@@ -21,27 +26,40 @@ var (
 			if err != nil {
 				fmt.Errorf("Error: %v", err)
 			}
-			serve(p)
+			serve(p, tmpl) // Start server
 		},
 	}
-
-	//go:embed templates/*
-	f embed.FS
 )
 
-func serve(port int) {
+func serve(port int, tmpl *template.Template) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		b := book.New()
 		b.ReadFromJSON()
 
-		tmpl, err := template.New("index").ParseFS(f, "templates/index.html")
-		if err != nil {
-			fmt.Errorf(err.Error())
-		}
+		//tmpl, err := template.New("index.html").ParseFS(fs, "templates/index.html")
+		//if err != nil {
+		//	fmt.Errorf("Error: %v", err)
+		//}
 
-		tmpl.ExecuteTemplate(w, "index.html", struct{ Content string }{
-			Content: "help",
-		})
+		w.Header().Add("Content-Type", "text/html")
+
+		// Debug
+		fmt.Printf("%v", tmpl)
+		tmpl.Execute(os.Stdout, nil)
+		tmpl.ExecuteTemplate(os.Stdout, "index.html", nil)
+		tmpl.ExecuteTemplate(os.Stdout, "index.html", struct{ test string }{test: "stefan"})
+		tmpl.ExecuteTemplate(os.Stdout, "index.html", b.ListMarks())
+		// End Debug
+
+		tmpl.ExecuteTemplate(w, "index.html", nil)
+		//	Marks: b.ListMarks(),
+		//})
+		//fmt.Printf("%v", b.ListMarks())
+		//err = tmpl.Execute(w, struct{}{})
+		//if err != nil {
+		//fmt.Errorf("Error: %v", err)
+		//}
+
 	})
 
 	addr := fmt.Sprintf(":%d", port)
