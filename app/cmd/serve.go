@@ -7,19 +7,24 @@ import (
 	"net/http"
 	"text/template"
 
+	"github.com/gorilla/mux"
 	"github.com/kekscode/earl/book"
 	"github.com/spf13/cobra"
 )
 
 var (
-	//fs holds our static web server content
+
+	// templatesFs holds our dynamic templates
 	//go:embed web/templates/*.html
-	//go:embed web/static/favicon/*.ico
+	templatesFs embed.FS
+
+	// staticFs holds our static web server content
 	//go:embed web/static/css/*.css
-	fs embed.FS
+	//go:embed web/static/favicon/*.ico
+	staticFs embed.FS
 
 	// Parse Web UI template
-	tmpl = template.Must(template.ParseFS(fs, "web/templates/index.html"))
+	tmpl = template.Must(template.ParseFS(templatesFs, "web/templates/index.html"))
 
 	// Used for flags.
 	serveCmd = &cobra.Command{
@@ -30,28 +35,23 @@ var (
 			if err != nil {
 				fmt.Errorf("Error: %v", err)
 			}
-			serve(p, tmpl, fs) // Start server
+			serve(p, tmpl, staticFs) // Start server
 		},
 	}
 )
 
-func serve(port int, tmpl *template.Template, fs embed.FS) {
+// serve is the main function for earls integrated webserver
+func serve(port int, tmpl *template.Template, staticFs embed.FS) {
+
+	// Our Muxer
+	r := mux.NewRouter()
 
 	// http.FS can be used to create a http Filesystem
-	var staticFS = http.FS(fs)
-	fsStatics := http.FileServer(staticFS)
+	statics := http.FS(staticFs)
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(statics)))
 
-	http.Handle("web/static/css/", fsStatics)
-
-	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
-		ico, err := fs.ReadFile("web/static/favicon/favicon.ico")
-		if err != nil {
-			fmt.Errorf("Error: %v", err)
-		}
-		w.Write(ico)
-	})
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// Handle index UI template
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 		b := book.New()
 		b.ReadFromJSON()
@@ -61,7 +61,7 @@ func serve(port int, tmpl *template.Template, fs embed.FS) {
 
 	addr := fmt.Sprintf(":%d", port)
 	log.Printf("Starting server at %s", addr)
-	if err := http.ListenAndServe(addr, nil); err != nil {
+	if err := http.ListenAndServe(addr, r); err != nil {
 		log.Fatal(err)
 	}
 }
