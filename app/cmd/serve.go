@@ -13,12 +13,13 @@ import (
 
 var (
 	//fs holds our static web server content
-	//go:embed templates/*
-	//go:embed templates/favicon/*
+	//go:embed web/templates/*.html
+	//go:embed web/static/favicon/*.ico
+	//go:embed web/static/css/*.css
 	fs embed.FS
 
 	// Parse Web UI template
-	tmpl = template.Must(template.ParseFS(fs, "templates/index.html"))
+	tmpl = template.Must(template.ParseFS(fs, "web/templates/index.html"))
 
 	// Used for flags.
 	serveCmd = &cobra.Command{
@@ -36,8 +37,14 @@ var (
 
 func serve(port int, tmpl *template.Template, fs embed.FS) {
 
+	// http.FS can be used to create a http Filesystem
+	var staticFS = http.FS(fs)
+	fsStatics := http.FileServer(staticFS)
+
+	http.Handle("web/static/css/", fsStatics)
+
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
-		ico, err := fs.ReadFile("templates/favicon/favicon.ico")
+		ico, err := fs.ReadFile("web/static/favicon/favicon.ico")
 		if err != nil {
 			fmt.Errorf("Error: %v", err)
 		}
