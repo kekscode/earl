@@ -15,16 +15,16 @@ import (
 var (
 
 	// templatesFs holds our dynamic templates
-	//go:embed web/templates/*.html
+	//go:embed templates/*.html
 	templatesFs embed.FS
 
 	// staticFs holds our static web server content
-	//go:embed web/static/css/*.css
-	//go:embed web/static/favicon/*.ico
+	//go:embed css/*.css
+	//go:embed favicon/*.ico
 	staticFs embed.FS
 
 	// Parse Web UI template
-	tmpl = template.Must(template.ParseFS(templatesFs, "web/templates/index.html"))
+	tmpl = template.Must(template.ParseFS(templatesFs, "templates/index.html"))
 
 	// Used for flags.
 	serveCmd = &cobra.Command{
@@ -48,7 +48,7 @@ func serve(port int, tmpl *template.Template, staticFs embed.FS) {
 
 	// http.FS can be used to create a http Filesystem
 	statics := http.FS(staticFs)
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(statics)))
+	r.PathPrefix("/static").Handler(http.StripPrefix("/static", http.FileServer(statics)))
 
 	// Handle index UI template
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
