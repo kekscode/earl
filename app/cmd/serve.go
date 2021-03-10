@@ -33,7 +33,7 @@ var (
 		Run: func(cmd *cobra.Command, args []string) {
 			p, err := cmd.Flags().GetInt("port")
 			if err != nil {
-				fmt.Errorf("Error: %v", err)
+				log.Fatalf("Error: %v", err)
 			}
 			serve(p, tmpl, staticFs) // Start server
 		},
