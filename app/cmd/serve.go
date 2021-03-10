@@ -12,8 +12,12 @@ import (
 )
 
 var (
+	//fs holds our static web server content
 	//go:embed templates/*
-	fs   embed.FS
+	//go:embed templates/favicon/*
+	fs embed.FS
+
+	// Parse Web UI template
 	tmpl = template.Must(template.ParseFS(fs, "templates/index.html"))
 
 	// Used for flags.
@@ -25,12 +29,21 @@ var (
 			if err != nil {
 				fmt.Errorf("Error: %v", err)
 			}
-			serve(p, tmpl) // Start server
+			serve(p, tmpl, fs) // Start server
 		},
 	}
 )
 
-func serve(port int, tmpl *template.Template) {
+func serve(port int, tmpl *template.Template, fs embed.FS) {
+
+	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		ico, err := fs.ReadFile("templates/favicon/favicon.ico")
+		if err != nil {
+			fmt.Errorf("Error: %v", err)
+		}
+		w.Write(ico)
+	})
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 		b := book.New()
