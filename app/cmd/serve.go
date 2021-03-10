@@ -36,10 +36,7 @@ func serve(port int, tmpl *template.Template) {
 		b := book.New()
 		b.ReadFromJSON()
 
-		tmpl.ExecuteTemplate(w, "index.html",
-			struct{ marks []book.Mark }{
-				marks: b.ListMarks(),
-			})
+		tmpl.ExecuteTemplate(w, "index.html", b.ListMarks())
 	})
 
 	addr := fmt.Sprintf(":%d", port)
