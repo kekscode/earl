@@ -52,7 +52,22 @@ func serve(port int, tmpl *template.Template, staticFs embed.FS) {
 
 	// Handle POST inserting a Bookmark
 	r.HandleFunc("/add", func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("%v+", r.PostForm)
+		b := book.New()
+		b.ReadFromJSON()
+
+		b.AddMark(r.PostFormValue("url"), []string{"fake"}, r.PostFormValue("comment"))
+
+		b.SaveToJSON()
+		/*
+			dump, err := httputil.DumpRequest(r, true)
+			if err != nil {
+				http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
+				return
+			}
+
+			fmt.Fprintf(w, "%q", dump)
+		*/
+
 		http.Redirect(w, r, "/", http.StatusFound)
 
 	}).Methods("POST")
