@@ -1,6 +1,7 @@
 <!doctype html>
 
 <html lang="en">
+
 <head>
   <title>Earl manages URLs</title>
   <meta charset="utf-8">
@@ -13,12 +14,55 @@
 </head>
 
 <body>
-  <p>
-    <ul>
-      {{ range . }}
-      <li><a href="{{.ID}}">{{.ID}}</a></li>
-      {{ end }}
-    </ul>
-  </p>
+
+  <!-- .container is main centered wrapper -->
+  <div class="container">
+
+    <form>
+      <div class="row">
+        <div class="twelve columns">
+          <label for="search">Search</label>
+          <input class="u-full-width" type="search" placeholder="" id="search">
+        </div>
+      </div>
+    </form>
+
+    <form>
+      <div class="row">
+        <div class="twelve columns">
+          <label for="addMark">New Bookmark</label>
+          <input class="u-full-width" type="text" placeholder="" id="addMark">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="six columns">
+          <label for="addTags">Tags</label>
+          <input class="u-full-width" type="text" placeholder="" id="addTags">
+        </div>
+
+        <div class="six columns">
+          <label for="addComment">Comment</label>
+          <input class="u-full-width" type="text" placeholder="" id="addComment">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="twelve columns">
+          <input class="button-primary" type="submit" value="Submit">
+        </div>
+      </div>
+    </form>
+
+    <div class="row">
+      <div class="twelve columns">
+        {{ range . }}
+        <p> <a href="{{.ID}}">{{.ID}}</a> </p>
+        {{ end }}
+      </div>
+    </div>
+
+  </div>
 </body>
+
 </html>
