@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"text/template"
 
 	"github.com/gorilla/mux"
@@ -52,21 +53,14 @@ func serve(port int, tmpl *template.Template, staticFs embed.FS) {
 
 	// Handle POST inserting a Bookmark
 	r.HandleFunc("/add", func(w http.ResponseWriter, r *http.Request) {
+
 		b := book.New()
 		b.ReadFromJSON()
 
-		b.AddMark(r.PostFormValue("url"), []string{"fake"}, r.PostFormValue("comment"))
+		tags := strings.Split(r.PostFormValue("tags"), ",")
+		b.AddMark(r.PostFormValue("url"), tags, r.PostFormValue("comment"))
 
 		b.SaveToJSON()
-		/*
-			dump, err := httputil.DumpRequest(r, true)
-			if err != nil {
-				http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
-				return
-			}
-
-			fmt.Fprintf(w, "%q", dump)
-		*/
 
 		http.Redirect(w, r, "/", http.StatusFound)
 
