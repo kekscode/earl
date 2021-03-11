@@ -74,8 +74,14 @@
             {{ range . }}
             <tr>
               <td><a href="{{.ID}}">{{.ID}}</a></td>
-              <td><a href="{{.Tags}}">{{.Tags}}</a></td>
-              <td><a href="{{.Comment}}">{{.Comment}}</a></td>
+              <td>
+                  {{ range .Tags }}
+                  "{{.}}" &nbsp;
+                  {{ end }}
+              </td>
+              <td>
+                {{.Comment}}
+              </td>
             </tr>
             {{ end }}
           </tbody>
