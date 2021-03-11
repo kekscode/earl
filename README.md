@@ -15,8 +15,26 @@ Earl tries to achieve this.
 
 ## Use
 
-earl add <url> [<title>] [<tags>] [<comment>]
-earl show "<url> [<title>] [<tags>] [<comment>]"
-earl list <url> [<title>] [<tags>] [<comment>]
-earl del,delete,remove,rm <url>
-earl edit <url> [<title>] [<tags>] [<comment>]
+The CLI semantics are:
+
+    Earl is used to add, manage and retrieve URLs.
+    It may be used on the command line and as a server.
+
+    Usage:
+      earl [command]
+
+    Available Commands:
+      add         add an URL
+      help        Help about any command
+      serve       run as a webserver
+
+    Flags:
+      -h, --help   help for earl
+
+    Additional help topics:
+      earl delete delete an URL
+      earl edit   edit an URL
+      earl list   list URLs
+      earl show   show an URL
+
+    Use "earl [command] --help" for more information about a command.
