@@ -18,11 +18,17 @@
   <!-- .container is main centered wrapper -->
   <div class="container">
 
+    <div class="row">
+      <div class="12 columns">
+        <h2>Earl <i>is managing your URLs</i></h2>
+      </div>
+    </div>
+
     <form>
       <div class="row">
         <div class="twelve columns">
           <label for="search">Search</label>
-          <input class="u-full-width" type="search" placeholder="" id="search">
+          <input autofocus class="u-full-width" type="search" placeholder="" id="search">
         </div>
       </div>
     </form>
@@ -56,13 +62,30 @@
 
     <div class="row">
       <div class="twelve columns">
-        {{ range . }}
-        <p> <a href="{{.ID}}">{{.ID}}</a> </p>
-        {{ end }}
+        <table class="u-full-width">
+          <thead>
+            <tr>
+              <th>URL</th>
+              <th>Tags</th>
+              <th>Comment</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range . }}
+            <tr>
+              <td><a href="{{.ID}}">{{.ID}}</a></td>
+              <td><a href="{{.Tags}}">{{.Tags}}</a></td>
+              <td><a href="{{.Comment}}">{{.Comment}}</a></td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
       </div>
     </div>
 
+
   </div>
+
 </body>
 
 </html>
