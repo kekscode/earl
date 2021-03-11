@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"text/template"
 
 	"github.com/gorilla/mux"
@@ -52,11 +53,9 @@ func serve(port int, tmpl *template.Template, staticFs embed.FS) {
 
 	// Handle POST inserting a Bookmark
 	r.HandleFunc("/add", func(w http.ResponseWriter, r *http.Request) {
+		httputil.DumpRequest(r, true)
+		http.Redirect(w, r, "/", http.StatusFound)
 
-		b := book.New()
-		b.ReadFromJSON()
-
-		tmpl.ExecuteTemplate(w, "index.html", b.ListMarks())
 	}).Methods("POST")
 
 	// Handle index UI template
