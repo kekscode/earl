@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/http/httputil"
 	"text/template"
 
 	"github.com/gorilla/mux"
@@ -53,7 +52,7 @@ func serve(port int, tmpl *template.Template, staticFs embed.FS) {
 
 	// Handle POST inserting a Bookmark
 	r.HandleFunc("/add", func(w http.ResponseWriter, r *http.Request) {
-		httputil.DumpRequest(r, true)
+		log.Printf("%v+", r.PostForm)
 		http.Redirect(w, r, "/", http.StatusFound)
 
 	}).Methods("POST")
