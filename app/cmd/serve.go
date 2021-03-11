@@ -50,6 +50,15 @@ func serve(port int, tmpl *template.Template, staticFs embed.FS) {
 	statics := http.FS(staticFs)
 	r.PathPrefix("/static").Handler(http.StripPrefix("/static", http.FileServer(statics)))
 
+	// Handle POST inserting a Bookmark
+	r.HandleFunc("/add", func(w http.ResponseWriter, r *http.Request) {
+
+		b := book.New()
+		b.ReadFromJSON()
+
+		tmpl.ExecuteTemplate(w, "index.html", b.ListMarks())
+	}).Methods("POST")
+
 	// Handle index UI template
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
@@ -57,7 +66,7 @@ func serve(port int, tmpl *template.Template, staticFs embed.FS) {
 		b.ReadFromJSON()
 
 		tmpl.ExecuteTemplate(w, "index.html", b.ListMarks())
-	})
+	}).Methods("GET")
 
 	addr := fmt.Sprintf(":%d", port)
 	log.Printf("Starting server at %s", addr)
